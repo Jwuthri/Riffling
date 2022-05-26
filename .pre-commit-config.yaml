@@ -1,0 +1,21 @@
+repos:
+- repo: local
+  hooks:
+  - id: black
+    name: black - Format code (-l 120)
+    entry: black metaphors
+    args: [-l 120]
+    language: system
+    types: [python]
+  - id: mypy
+    name: mypy - Check static types match
+    entry: mypy bionic_reading --ignore-missing-imports --no-site-packages
+    pass_filenames: false
+    language: system
+    types: [python]
+  - id: pytest
+    name: pytest - Check unit tests
+    entry: pytest --doctest-modules
+    pass_filenames: false
+    language: system
+    types: [python]
