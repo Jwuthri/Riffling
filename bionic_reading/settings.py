@@ -32,6 +32,12 @@ class Format(Enum):
     BOLD = "bold"
 
 
+class Colors(Enum):
+    RED = "red"
+    YELLOW = "yellow"
+    BLUE = "blue"
+
+
 # ROOT PATH
 PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(PROJECT_PATH)

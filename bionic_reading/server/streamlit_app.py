@@ -1,7 +1,7 @@
 import streamlit as st
 
 from bionic_reading import BionicReading
-from bionic_reading.settings import StopWordsBehavior, RareBehavior
+from bionic_reading.settings import StopWordsBehavior, RareBehavior, Colors
 
 
 def app():
@@ -34,6 +34,9 @@ class BionicReadingApp:
         )
         rare_words_behavior = st.selectbox("rare_words_behavior", [behavior.value.lower() for behavior in RareBehavior])
         rare_words_max_freq = st.slider("rare_words_max_freq", min_value=0, max_value=100)
+        highlight_color = st.selectbox(
+            "highlight_color", [color.value.lower() for color in Colors]
+        )
         text = st.text_area("Enter the text here:")
         if text:
             _ = BionicReading(
@@ -45,6 +48,7 @@ class BionicReadingApp:
                 output_format="html",
                 rare_words_behavior=rare_words_behavior,
                 rare_words_max_freq=rare_words_max_freq,
+                highlight_color=highlight_color
             ).read_faster(text=text)
             st.markdown(_, unsafe_allow_html=True)
 

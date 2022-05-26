@@ -6,8 +6,8 @@ from typing import List, Tuple
 from sklearn.feature_extraction.text import CountVectorizer
 
 from bionic_reading.data import stopwords_set
-from bionic_reading.utils.string_utils import string_contains_digit, strike_string
-from bionic_reading.settings import RareBehavior, Format
+from bionic_reading.settings import RareBehavior, Format, Colors
+from bionic_reading.utils.file_utils import string_contains_digit, strike_string
 from bionic_reading.settings import SIMPLE_SPLITTER, OutputFormat, StopWordsBehavior
 
 
@@ -24,6 +24,7 @@ class BionicReading:
         output_format: str = OutputFormat.HTML.value,
         rare_words_behavior: str = RareBehavior.UNDERLINE.value,
         rare_words_max_freq: int = 5,
+        highlight_color: str = Colors.RED.value
     ):
         """
         Inits BionicReading
@@ -44,6 +45,8 @@ class BionicReading:
         :type rare_words_behavior: str
         :param rare_words_max_freq: Max frequency word to be considered as rare
         :type rare_words_max_freq: int
+        :param highlight_color: Color that highlight the text
+        :type highlight_color: str
         """
         self.fixation = fixation
         self.saccades = saccades
@@ -53,11 +56,8 @@ class BionicReading:
         self.stopwords_behavior = stopwords_behavior
         self.rare_words_behavior = rare_words_behavior
         self.rare_words_max_freq = rare_words_max_freq
+        self.highlight_color = highlight_color
         self.non_tokens = string.punctuation + " \n\t"
-        self.highlight = "\033[93m"
-        self.underline = "\033[4m"
-        self.bold = "\033[1m"
-        self.end = "\033[0m"
 
     @property
     def fixation(self):
@@ -293,6 +293,36 @@ class BionicReading:
         """
         del self._rare_words_max_freq
 
+    @property
+    def highlight_color(self):
+        """
+        It returns the highlight color of the object.
+        :return: The highlight color.
+        """
+        return self._highlight_color
+
+    @highlight_color.setter
+    def highlight_color(self, value):
+        """
+        `highlight_color` is a function that takes in a `self` and a `value` argument. It then creates a list of possible
+        values that can be passed into the function. It then asserts that the value passed into the function is in the list
+        of possible values. It then asserts that the value passed into the function is a string. It then sets the
+        `_highlight_color` attribute to the value passed into the function
+
+        :param value: the value of the parameter
+        """
+        possible_values = [color.value.lower() for color in Colors]
+        assert value in possible_values, f"please enter a highlight_color within {possible_values}"
+        assert isinstance(value, str), "please use a highlight_color str type"
+        self._highlight_color = value
+
+    @highlight_color.deleter
+    def highlight_color(self):
+        """
+        It deletes the attribute _highlight_color from the object self.
+        """
+        del self._highlight_color
+
     def get_rare_words(self, text: str) -> List[str]:
         """
         Takes a string of text, and returns a list of words that appear more than a certain number of times in the text
@@ -345,13 +375,13 @@ class BionicReading:
                 return f"<b>{token}</b>"
         else:
             if highlight_format == Format.HIGHLIGHT.value:
-                return f"{self.highlight}{token}{self.end}"
+                return f"\033[93m{token}\033[0m"
             elif highlight_format == Format.UNDERLINE.value:
-                return f"{self.underline}{token}{self.end}"
+                return f"\033[4m{token}\033[0m"
             elif highlight_format == Format.STRIKETHROUGH.value:
                 return strike_string(token)
             else:
-                return f"{self.bold}{token}{self.end}"
+                return f"\033[1m{token}\033[0m"
 
     def fixation_highlight(self, token: str) -> Tuple[str, str]:
         """
@@ -463,7 +493,7 @@ class BionicReading:
         output = text
         if self.output_format == OutputFormat.HTML.value:
             style = "b {font-weight: %d} " % (self.opacity * 1000)
-            style += "mark {color: red;} "
+            style += "mark {color: %s} " % self.highlight_color
             output = f"<!DOCTYPE html><html><head><style>{style}</style></head><body><p>{text}</p></body></html>"
 
         return output
@@ -489,7 +519,7 @@ class BionicReading:
 
 
 if __name__ == "__main__":
-    text = """
+    _text = """
     transduction problems such as language modeling and machine translation [35, 2, 5]. Numerous
 efforts have since continued to push the boundaries of recurrent language models and encoder-decoder
 architectures [38, 24, 15].
@@ -544,7 +574,7 @@ respectively.
         output_format="python",
         rare_words_behavior=RareBehavior.HIGHLIGHT.value,
         rare_words_max_freq=1,
-    ).read_faster(text=text)
-    print(text)
+    ).read_faster(text=_text)
+    print(_text)
     print("*" * 20)
     print(_)
