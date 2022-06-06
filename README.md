@@ -1,6 +1,6 @@
-# Bionic Reading++ - Convert Text into Better Way to Read Faster
-Bionic Reading is a new method facilitating the reading process by guiding the eyes through text with artificial fixation points. As a result, the reader is only focusing on the highlighted initial letters and lets the brain center complete the word.
-In a digital world dominated by shallow forms of reading, Bionic Reading aims to encourage a more in-depth reading and understanding of written content.
+# Riffling - Convert Text into Better Way to Read Faster
+Riffling is a new method facilitating the reading process by guiding the eyes through text with artificial fixation points. As a result, the reader is only focusing on the highlighted initial letters and lets the brain center complete the word.
+In a digital world dominated by shallow forms of reading, Riffling aims to encourage a more in-depth reading and understanding of written content.
 
 ###### This new version of BionicReading has been improved by the adding few others properties:
 ~~~
